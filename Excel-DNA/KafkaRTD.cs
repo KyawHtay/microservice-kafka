@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
+﻿using System;
+using System.Collections.Generic;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using ExcelDna.Integration;
+using KafkaNET;
+using KafkaNET.Model;
+using KafkaNET.Protocol;
 using ExcelDna.Integration.Rtd;
 
 namespace Excel_DNA
