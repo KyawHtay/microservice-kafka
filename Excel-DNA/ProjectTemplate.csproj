@@ -30,9 +30,6 @@
 		<ErrorReport>prompt</ErrorReport>
 		<WarningLevel>4</WarningLevel>
 	</PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="ExcelDna.Addin" Version="*-*"/>
-  </ItemGroup>
 	<ItemGroup>
 		<Reference Include="System"/>
 		$if$ ($targetframeworkversion$ >= 3.5)

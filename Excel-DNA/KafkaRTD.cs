@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
 using ExcelDna.Integration;
-using KafkaNET;
-using KafkaNET.Model;
-using KafkaNET.Protocol;
 using ExcelDna.Integration.Rtd;
 
 namespace Excel_DNA
@@ -20,11 +15,11 @@ namespace Excel_DNA
             _topics.Add("k2", "test-topic2");
         }
 
-        public override object ConnectData(TopicInfo topicInfo, ref bool newValues)
+        public  object ConnectData(TopicInfo topic, IList<string> topicInfoList, ref bool newValues)
         {
-            if (_topics.ContainsKey(topicInfo.TopicId))
+            if (_topics.ContainsKey(topic.TopicName))
             {
-                return GetLatestValue(topicInfo.TopicId);
+                return GetLatestValue(topic.TopicName);
             }
             else
             {
@@ -40,18 +35,21 @@ namespace Excel_DNA
             using (var connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-
-                var query = $"SELECT TOP 1 value FROM MyTable WHERE key = '{key}' ORDER BY time DESC";
-                var value = connection.ExecuteScalar<double?>(query);
-
-                if (value != null)
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) FROM MyTable", connection))
                 {
-                    return value.Value;
+                    int count = (int)command.ExecuteScalar();
+
+                    if (count != 0)
+                    {
+                        return count;
+                    }
+                    else
+                    {
+                        return ExcelError.ExcelErrorValue;
+                    }
                 }
-                else
-                {
-                    return ExcelError.ExcelErrorValue;
-                }
+
+              
             }
         }
     }
